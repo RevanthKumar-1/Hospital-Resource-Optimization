@@ -8,104 +8,50 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #fffdf5; min-height: 100vh; }
-
-        .navbar {
-            background: white; padding: 16px 40px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 3px solid #f5c518;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
+        .navbar { background: white; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f5c518; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .navbar .logo { font-size: 22px; font-weight: 700; color: #333; }
         .navbar .logo span { color: #f5c518; }
+        .nav-links { display: flex; gap: 8px; }
+        .nav-link { padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; color: #666; transition: all 0.2s; }
+        .nav-link:hover { background: #fff8dc; color: #b8860b; }
+        .nav-link.active { background: #f5c518; color: #333; }
         .navbar-right { display: flex; align-items: center; gap: 20px; }
         .doctor-info { text-align: right; }
         .doctor-info .doc-name { font-weight: 600; color: #333; font-size: 15px; }
         .doctor-info .doc-dept { font-size: 12px; color: #888; }
-        .logout-btn {
-            background: #f5c518; color: #333; border: none;
-            padding: 8px 18px; border-radius: 8px; font-size: 14px;
-            font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s;
-        }
+        .logout-btn { background: #f5c518; color: #333; border: none; padding: 8px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; }
         .logout-btn:hover { background: #e0b400; }
-
         .main { padding: 36px 40px; max-width: 1200px; margin: 0 auto; }
         .welcome-bar { margin-bottom: 28px; }
         .welcome-bar h1 { font-size: 26px; color: #333; font-weight: 700; }
         .welcome-bar p { color: #888; font-size: 14px; margin-top: 4px; }
-
-        .profile-card {
-            background: white; border-radius: 14px; padding: 28px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px;
-            display: flex; align-items: center; gap: 28px;
-            border-left: 6px solid #f5c518;
-        }
-        .profile-avatar {
-            width: 72px; height: 72px; border-radius: 50%;
-            background: #fff8dc; display: flex; align-items: center;
-            justify-content: center; font-size: 32px; flex-shrink: 0;
-        }
+        .profile-card { background: white; border-radius: 14px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; display: flex; align-items: center; gap: 28px; border-left: 6px solid #f5c518; }
+        .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: #fff8dc; display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
         .profile-details { flex: 1; }
         .profile-details h2 { font-size: 20px; font-weight: 700; color: #333; }
         .profile-tags { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-        .tag {
-            background: #fff8dc; color: #b8860b;
-            padding: 4px 12px; border-radius: 20px;
-            font-size: 12px; font-weight: 600;
-        }
+        .tag { background: #fff8dc; color: #b8860b; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         .profile-meta { display: flex; gap: 28px; margin-top: 12px; flex-wrap: wrap; }
         .profile-meta .meta-item { font-size: 13px; color: #666; }
         .profile-meta .meta-item span { font-weight: 600; color: #333; }
-
-        .stats-row {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 20px; margin-bottom: 32px;
-        }
-        .stat-card {
-            background: white; border-radius: 14px; padding: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            border-top: 4px solid #f5c518; transition: transform 0.2s;
-        }
-        .stat-card:hover { transform: translateY(-2px); }
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
+        .stat-card { background: white; border-radius: 14px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-top: 4px solid #f5c518; }
         .stat-card .icon { font-size: 28px; margin-bottom: 12px; }
         .stat-card .value { font-size: 34px; font-weight: 700; color: #333; }
         .stat-card .label { font-size: 13px; color: #888; margin-top: 4px; }
-
         .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .card {
-            background: white; border-radius: 14px; padding: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        .card-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid #fff8dc;
-        }
+        .card { background: white; border-radius: 14px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid #fff8dc; }
         .card-header h3 { font-size: 16px; font-weight: 700; color: #333; }
-        .count-badge {
-            background: #fff8dc; color: #b8860b;
-            padding: 4px 12px; border-radius: 20px;
-            font-size: 12px; font-weight: 600;
-        }
-
+        .count-badge { background: #fff8dc; color: #b8860b; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         table { width: 100%; border-collapse: collapse; }
-        th {
-            text-align: left; font-size: 11px; text-transform: uppercase;
-            color: #aaa; padding: 8px 0; border-bottom: 1px solid #f5f5f5;
-        }
-        td {
-            padding: 12px 0; font-size: 14px; color: #444;
-            border-bottom: 1px solid #fafafa; vertical-align: middle;
-        }
+        th { text-align: left; font-size: 11px; text-transform: uppercase; color: #aaa; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
+        td { padding: 12px 0; font-size: 14px; color: #444; border-bottom: 1px solid #fafafa; vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
-
-        .badge {
-            padding: 4px 10px; border-radius: 20px;
-            font-size: 11px; font-weight: 600;
-        }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
         .badge.yellow { background: #fff8dc; color: #b8860b; }
         .badge.green { background: #e8f5e9; color: #2e7d32; }
         .badge.red { background: #fdecea; color: #c62828; }
-        .badge.blue { background: #e3f2fd; color: #1565c0; }
-
         .empty-state { text-align: center; padding: 32px 20px; color: #bbb; }
         .empty-state .empty-icon { font-size: 40px; margin-bottom: 10px; }
         .empty-state p { font-size: 14px; }
@@ -136,6 +82,10 @@
 <!-- Navbar -->
 <div class="navbar">
     <div class="logo">🏥 Hospital<span>System</span></div>
+    <div class="nav-links">
+        <a href="/doctor/dashboard" class="nav-link active">📊 Dashboard</a>
+        <a href="/doctor/patients" class="nav-link">👥 My Patients</a>
+    </div>
     <div class="navbar-right">
         <div class="doctor-info">
             <div class="doc-name">Dr. <%= name %></div>
@@ -147,7 +97,6 @@
 
 <!-- Main -->
 <div class="main">
-
     <div class="welcome-bar">
         <h1>Good Day, Dr. <%= name %> 👋</h1>
         <p>Here's your overview for today.</p>
@@ -200,18 +149,10 @@
                 <span class="count-badge"><%= totalPatients %> patients</span>
             </div>
             <% if (activeAssignments == null || activeAssignments.isEmpty()) { %>
-                <div class="empty-state">
-                    <div class="empty-icon">🙂</div>
-                    <p>No patients assigned yet.</p>
-                </div>
+                <div class="empty-state"><div class="empty-icon">🙂</div><p>No patients assigned yet.</p></div>
             <% } else { %>
                 <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Age</th>
-                        <th>Blood Group</th>
-                        <th>Phone</th>
-                    </tr>
+                    <tr><th>Name</th><th>Age</th><th>Blood Group</th><th>Phone</th></tr>
                     <% for (DoctorPatient dp : activeAssignments) {
                         Patient p = patientMap != null ? patientMap.get(dp.getPatientId()) : null;
                         if (p != null) { %>
@@ -233,18 +174,10 @@
                 <span class="count-badge"><%= todayAppointments %> scheduled</span>
             </div>
             <% if (todayOtSchedules == null || todayOtSchedules.isEmpty()) { %>
-                <div class="empty-state">
-                    <div class="empty-icon">📭</div>
-                    <p>No procedures scheduled for today.</p>
-                </div>
+                <div class="empty-state"><div class="empty-icon">📭</div><p>No procedures today.</p></div>
             <% } else { %>
                 <table>
-                    <tr>
-                        <th>Procedure</th>
-                        <th>OT</th>
-                        <th>Time</th>
-                        <th>Status</th>
-                    </tr>
+                    <tr><th>Procedure</th><th>OT</th><th>Time</th><th>Status</th></tr>
                     <% for (OtSchedule os : todayOtSchedules) { %>
                     <tr>
                         <td><%= os.getProcedureName() %></td>
@@ -257,28 +190,19 @@
             <% } %>
         </div>
 
-        <!-- Active Bed Admissions -->
+        <!-- Patients in Beds -->
         <div class="card">
             <div class="card-header">
                 <h3>🛏️ Patients in Beds</h3>
                 <span class="count-badge"><%= activeBeds %> active</span>
             </div>
             <% if (bedAdmissions == null || bedAdmissions.isEmpty()) { %>
-                <div class="empty-state">
-                    <div class="empty-icon">🛏️</div>
-                    <p>No patients currently in beds.</p>
-                </div>
+                <div class="empty-state"><div class="empty-icon">🛏️</div><p>No patients in beds.</p></div>
             <% } else { %>
                 <table>
-                    <tr>
-                        <th>Patient</th>
-                        <th>Bed</th>
-                        <th>Admitted</th>
-                        <th>Discharge</th>
-                    </tr>
+                    <tr><th>Patient</th><th>Bed</th><th>Admitted</th><th>Discharge</th></tr>
                     <% for (BedAdmission ba : bedAdmissions) {
-                        Patient p = patientMap != null ? patientMap.get(ba.getPatientId()) : null;
-                    %>
+                        Patient p = patientMap != null ? patientMap.get(ba.getPatientId()) : null; %>
                     <tr>
                         <td><%= p != null ? p.getName() : "Unknown" %></td>
                         <td>Bed #<%= ba.getBedId() %></td>
@@ -292,6 +216,5 @@
 
     </div>
 </div>
-
 </body>
 </html>

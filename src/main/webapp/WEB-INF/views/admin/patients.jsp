@@ -184,6 +184,8 @@
         <a href="/admin/doctors">👨‍⚕️ Doctors</a>
         <a href="/admin/patients" class="active">👥 Patients</a>
         <a href="/admin/schedule">📅 Schedule</a>
+		<a href="/admin/labs">🔬 Labs</a>
+		<a href="/admin/external" class="active">🌐 External Sources</a>
     </div>
     <div class="sidebar-bottom">
         <a href="/logout" class="logout-btn">🚪 Logout</a>

@@ -39,6 +39,19 @@ public class Patient {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+    
+    @Column(name = "google_fit_token", columnDefinition = "TEXT")
+    private String googleFitAccessToken;
+
+    @Column(name = "google_fit_refresh_token", columnDefinition = "TEXT")
+    private String googleFitRefreshToken;
+
+    // Getters and Setters
+    public String getGoogleFitAccessToken() { return googleFitAccessToken; }
+    public void setGoogleFitAccessToken(String token) { this.googleFitAccessToken = token; }
+
+    public String getGoogleFitRefreshToken() { return googleFitRefreshToken; }
+    public void setGoogleFitRefreshToken(String token) { this.googleFitRefreshToken = token; }
 
     @PrePersist
     protected void onCreate() {

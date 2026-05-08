@@ -8,144 +8,59 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #fdf4f4; }
-
-        .sidebar {
-            width: 240px; background: white; height: 100vh;
-            position: fixed; top: 0; left: 0;
-            border-right: 3px solid #e53935;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.06);
-            display: flex; flex-direction: column;
-        }
-        .sidebar-logo {
-            padding: 24px 20px; font-size: 20px;
-            font-weight: 700; color: #333;
-            border-bottom: 1px solid #f5f5f5;
-        }
+        .sidebar { width: 240px; background: white; height: 100vh; position: fixed; top: 0; left: 0; border-right: 3px solid #e53935; box-shadow: 2px 0 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar-logo { padding: 24px 20px; font-size: 20px; font-weight: 700; color: #333; border-bottom: 1px solid #f5f5f5; }
         .sidebar-logo span { color: #e53935; }
-        .sidebar-admin {
-            padding: 16px 20px; background: #fdecea;
-            display: flex; align-items: center; gap: 12px;
-            border-bottom: 1px solid #f5f5f5;
-        }
-        .admin-avatar {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: #e53935; display: flex;
-            align-items: center; justify-content: center;
-            font-size: 18px; flex-shrink: 0;
-        }
+        .sidebar-admin { padding: 16px 20px; background: #fdecea; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f5f5f5; }
+        .admin-avatar { width: 40px; height: 40px; border-radius: 50%; background: #e53935; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
         .admin-name { font-size: 14px; font-weight: 600; color: #333; }
         .admin-role { font-size: 11px; color: #e53935; font-weight: 600; text-transform: uppercase; }
         .sidebar-menu { flex: 1; padding: 16px 0; }
-        .menu-label {
-            font-size: 10px; text-transform: uppercase; color: #bbb;
-            padding: 8px 20px; font-weight: 600; letter-spacing: 1px;
-        }
-        .sidebar-menu a {
-            display: flex; align-items: center; gap: 12px; color: #555;
-            text-decoration: none; padding: 12px 20px; font-size: 14px;
-            transition: all 0.2s; border-left: 3px solid transparent;
-        }
+        .menu-label { font-size: 10px; text-transform: uppercase; color: #bbb; padding: 8px 20px; font-weight: 600; letter-spacing: 1px; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 12px; color: #555; text-decoration: none; padding: 12px 20px; font-size: 14px; transition: all 0.2s; border-left: 3px solid transparent; }
         .sidebar-menu a:hover { background: #fdecea; color: #e53935; border-left-color: #e53935; }
         .sidebar-menu a.active { background: #fdecea; color: #e53935; border-left-color: #e53935; font-weight: 600; }
         .sidebar-bottom { padding: 16px 20px; border-top: 1px solid #f5f5f5; }
-        .logout-btn {
-            display: flex; align-items: center; gap: 10px; color: #e53935;
-            text-decoration: none; font-size: 14px; font-weight: 600;
-            padding: 10px 14px; border-radius: 8px; transition: background 0.2s;
-        }
+        .logout-btn { display: flex; align-items: center; gap: 10px; color: #e53935; text-decoration: none; font-size: 14px; font-weight: 600; padding: 10px 14px; border-radius: 8px; transition: background 0.2s; }
         .logout-btn:hover { background: #fdecea; }
-
-        .navbar {
-            margin-left: 240px; background: white; padding: 16px 36px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #f0f0f0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            position: sticky; top: 0; z-index: 10;
-        }
+        .navbar { margin-left: 240px; background: white; padding: 16px 36px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 10; }
         .navbar h2 { font-size: 20px; color: #333; font-weight: 700; }
         .navbar .date { font-size: 13px; color: #888; }
-
         .main { margin-left: 240px; padding: 32px 36px; }
         .welcome-bar { margin-bottom: 28px; }
         .welcome-bar h1 { font-size: 24px; color: #333; font-weight: 700; }
         .welcome-bar p { color: #888; font-size: 14px; margin-top: 4px; }
-
-        .stats-row {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 20px; margin-bottom: 28px;
-        }
-        .stat-card {
-            background: white; border-radius: 14px; padding: 22px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            border-top: 4px solid #e53935; transition: transform 0.2s;
-        }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 28px; }
+        .stat-card { background: white; border-radius: 14px; padding: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-top: 4px solid #e53935; transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-2px); }
         .stat-card .icon { font-size: 26px; margin-bottom: 10px; }
         .stat-card .value { font-size: 32px; font-weight: 700; color: #333; }
         .stat-card .label { font-size: 13px; color: #888; margin-top: 4px; }
         .stat-card .sub { font-size: 11px; color: #bbb; margin-top: 4px; }
-
-        .content-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-        }
-        .card {
-            background: white; border-radius: 14px; padding: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        .card-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid #fdecea;
-        }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .card { background: white; border-radius: 14px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid #fdecea; }
         .card-header h3 { font-size: 16px; font-weight: 700; color: #333; }
-        .count-badge {
-            background: #fdecea; color: #e53935;
-            padding: 4px 12px; border-radius: 20px;
-            font-size: 12px; font-weight: 600;
-        }
-
-        .resource-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0; border-bottom: 1px solid #fafafa; font-size: 14px;
-        }
+        .count-badge { background: #fdecea; color: #e53935; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .resource-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #fafafa; font-size: 14px; }
         .resource-row:last-child { border-bottom: none; }
-        .resource-label { color: #555; }
-
-        .progress-bar {
-            height: 6px; background: #f5f5f5;
-            border-radius: 4px; margin-top: 4px;
-        }
+        .progress-bar { height: 6px; background: #f5f5f5; border-radius: 4px; margin-top: 4px; }
         .progress-fill { height: 100%; border-radius: 4px; }
-
         table { width: 100%; border-collapse: collapse; }
-        th {
-            text-align: left; font-size: 11px; text-transform: uppercase;
-            color: #aaa; padding: 8px 0; border-bottom: 1px solid #f5f5f5;
-        }
-        td {
-            padding: 10px 0; font-size: 14px; color: #444;
-            border-bottom: 1px solid #fafafa; vertical-align: middle;
-        }
+        th { text-align: left; font-size: 11px; text-transform: uppercase; color: #aaa; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
+        td { padding: 10px 0; font-size: 14px; color: #444; border-bottom: 1px solid #fafafa; vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
-
-        .badge {
-            padding: 4px 10px; border-radius: 20px;
-            font-size: 11px; font-weight: 600;
-        }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
         .badge.green { background: #e8f5e9; color: #2e7d32; }
         .badge.red { background: #fdecea; color: #c62828; }
         .badge.orange { background: #fff3e0; color: #e65100; }
         .badge.blue { background: #e3f2fd; color: #1565c0; }
         .badge.grey { background: #f5f5f5; color: #757575; }
-
-        .alert-item {
-            padding: 12px 14px; border-radius: 10px;
-            font-size: 13px; margin-bottom: 8px;
-        }
+        .alert-item { padding: 12px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 8px; }
         .alert-item.warning { background: #fff3e0; color: #e65100; }
         .alert-item.danger { background: #fdecea; color: #c62828; }
         .alert-item.success { background: #e8f5e9; color: #2e7d32; }
         .alert-item.info { background: #e3f2fd; color: #1565c0; }
-
         .empty-state { text-align: center; padding: 28px; color: #bbb; }
         .empty-state .icon { font-size: 36px; margin-bottom: 8px; }
         .empty-state p { font-size: 14px; }
@@ -157,17 +72,28 @@
     Admin admin = (Admin) request.getAttribute("admin");
     String name = (admin != null) ? admin.getName() : "Admin";
 
-    long totalBeds = (long) request.getAttribute("totalBeds");
-    long availableBeds = (long) request.getAttribute("availableBeds");
-    long occupiedBeds = (long) request.getAttribute("occupiedBeds");
-    long totalIcu = (long) request.getAttribute("totalIcu");
-    long availableIcu = (long) request.getAttribute("availableIcu");
-    long occupiedIcu = (long) request.getAttribute("occupiedIcu");
-    long totalOt = (long) request.getAttribute("totalOt");
-    long availableOt = (long) request.getAttribute("availableOt");
-    long totalOxygen = (long) request.getAttribute("totalOxygen");
-    long totalDoctors = (long) request.getAttribute("totalDoctors");
-    long totalPatients = (long) request.getAttribute("totalPatients");
+	long totalBeds = request.getAttribute("totalBeds") != null
+	        ? ((Number) request.getAttribute("totalBeds")).longValue() : 0L;
+	long availableBeds = request.getAttribute("availableBeds") != null
+	        ? ((Number) request.getAttribute("availableBeds")).longValue() : 0L;
+	long occupiedBeds = request.getAttribute("occupiedBeds") != null
+	        ? ((Number) request.getAttribute("occupiedBeds")).longValue() : 0L;
+	long totalIcu = request.getAttribute("totalIcu") != null
+	        ? ((Number) request.getAttribute("totalIcu")).longValue() : 0L;
+	long availableIcu = request.getAttribute("availableIcu") != null
+	        ? ((Number) request.getAttribute("availableIcu")).longValue() : 0L;
+	long occupiedIcu = request.getAttribute("occupiedIcu") != null
+	        ? ((Number) request.getAttribute("occupiedIcu")).longValue() : 0L;
+	long totalOt = request.getAttribute("totalOt") != null
+	        ? ((Number) request.getAttribute("totalOt")).longValue() : 0L;
+	long availableOt = request.getAttribute("availableOt") != null
+	        ? ((Number) request.getAttribute("availableOt")).longValue() : 0L;
+	long totalOxygen = request.getAttribute("totalOxygen") != null
+	        ? ((Number) request.getAttribute("totalOxygen")).longValue() : 0L;
+	long totalDoctors = request.getAttribute("totalDoctors") != null
+	        ? ((Number) request.getAttribute("totalDoctors")).longValue() : 0L;
+	long totalPatients = request.getAttribute("totalPatients") != null
+	        ? ((Number) request.getAttribute("totalPatients")).longValue() : 0L;
 
     List<Doctor> recentDoctors = (List<Doctor>) request.getAttribute("recentDoctors");
     List<Patient> recentPatients = (List<Patient>) request.getAttribute("recentPatients");
@@ -177,13 +103,11 @@
     Map<Long, String> patientNameMap = (Map<Long, String>) request.getAttribute("patientNameMap");
     Map<Long, String> doctorNameMap = (Map<Long, String>) request.getAttribute("doctorNameMap");
 
-    // Utilization percentages
     int bedPct = totalBeds > 0 ? (int)((occupiedBeds * 100) / totalBeds) : 0;
     int icuPct = totalIcu > 0 ? (int)((occupiedIcu * 100) / totalIcu) : 0;
     int otPct = totalOt > 0 ? (int)(((totalOt - availableOt) * 100) / totalOt) : 0;
 
-    java.time.format.DateTimeFormatter fmt =
-        java.time.format.DateTimeFormatter.ofPattern("EEEE, MMMM dd yyyy");
+    java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter.ofPattern("EEEE, MMMM dd yyyy");
     String today = java.time.LocalDate.now().format(fmt);
 %>
 
@@ -205,6 +129,9 @@
         <a href="/admin/doctors">👨‍⚕️ Doctors</a>
         <a href="/admin/patients">👥 Patients</a>
         <a href="/admin/schedule">📅 Schedule</a>
+        <div class="menu-label">Extended</div>
+        <a href="/admin/labs">🔬 Labs</a>
+        <a href="/admin/external">🌐 External Sources</a>
     </div>
     <div class="sidebar-bottom">
         <a href="/logout" class="logout-btn">🚪 Logout</a>
@@ -219,13 +146,12 @@
 
 <!-- Main -->
 <div class="main">
-
     <div class="welcome-bar">
         <h1>Welcome back, <%= name %> 👋</h1>
         <p>Here's what's happening in the hospital today.</p>
     </div>
 
-    <!-- Stats Row 1 - Resources -->
+    <!-- Stats Row 1 -->
     <div class="stats-row">
         <div class="stat-card">
             <div class="icon">🛏️</div>
@@ -253,7 +179,7 @@
         </div>
     </div>
 
-    <!-- Stats Row 2 - People -->
+    <!-- Stats Row 2 -->
     <div class="stats-row">
         <div class="stat-card">
             <div class="icon">👨‍⚕️</div>
@@ -286,126 +212,58 @@
 
         <!-- Resource Utilization -->
         <div class="card">
-            <div class="card-header">
-                <h3>📊 Resource Utilization</h3>
-            </div>
+            <div class="card-header"><h3>📊 Resource Utilization</h3></div>
             <div class="resource-row">
-                <span class="resource-label">General Beds</span>
-                <span class="badge <%= bedPct > 80 ? "red" : bedPct > 60 ? "orange" : "green" %>">
-                    <%= bedPct %>%
-                </span>
+                <span>General Beds</span>
+                <span class="badge <%= bedPct > 80 ? "red" : bedPct > 60 ? "orange" : "green" %>"><%= bedPct %>%</span>
             </div>
-            <div class="progress-bar">
-                <div class="progress-fill"
-                     style="width:<%= bedPct %>%;
-                     background:<%= bedPct > 80 ? "#c62828" : bedPct > 60 ? "#e65100" : "#2e7d32" %>">
-                </div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:<%= bedPct %>%; background:<%= bedPct > 80 ? "#c62828" : bedPct > 60 ? "#e65100" : "#2e7d32" %>"></div></div>
 
             <div class="resource-row" style="margin-top:12px">
-                <span class="resource-label">ICU Units</span>
-                <span class="badge <%= icuPct > 80 ? "red" : icuPct > 60 ? "orange" : "green" %>">
-                    <%= icuPct %>%
-                </span>
+                <span>ICU Units</span>
+                <span class="badge <%= icuPct > 80 ? "red" : icuPct > 60 ? "orange" : "green" %>"><%= icuPct %>%</span>
             </div>
-            <div class="progress-bar">
-                <div class="progress-fill"
-                     style="width:<%= icuPct %>%;
-                     background:<%= icuPct > 80 ? "#c62828" : icuPct > 60 ? "#e65100" : "#2e7d32" %>">
-                </div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:<%= icuPct %>%; background:<%= icuPct > 80 ? "#c62828" : icuPct > 60 ? "#e65100" : "#2e7d32" %>"></div></div>
 
             <div class="resource-row" style="margin-top:12px">
-                <span class="resource-label">Operation Theatres</span>
-                <span class="badge <%= otPct > 80 ? "red" : otPct > 60 ? "orange" : "green" %>">
-                    <%= otPct %>%
-                </span>
+                <span>Operation Theatres</span>
+                <span class="badge <%= otPct > 80 ? "red" : otPct > 60 ? "orange" : "green" %>"><%= otPct %>%</span>
             </div>
-            <div class="progress-bar">
-                <div class="progress-fill"
-                     style="width:<%= otPct %>%;
-                     background:<%= otPct > 80 ? "#c62828" : otPct > 60 ? "#e65100" : "#2e7d32" %>">
-                </div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:<%= otPct %>%; background:<%= otPct > 80 ? "#c62828" : otPct > 60 ? "#e65100" : "#2e7d32" %>"></div></div>
         </div>
 
         <!-- AI Recommendations -->
         <div class="card">
-            <div class="card-header">
-                <h3>🤖 AI Recommendations</h3>
-            </div>
-            <% if (bedPct > 80) { %>
-                <div class="alert-item danger">
-                    🚨 Bed utilization critical (<%= bedPct %>%) — consider emergency capacity measures
-                </div>
-            <% } else if (bedPct > 60) { %>
-                <div class="alert-item warning">
-                    ⚠️ Bed utilization high (<%= bedPct %>%) — monitor closely
-                </div>
-            <% } else { %>
-                <div class="alert-item success">
-                    ✅ Bed utilization is optimal (<%= bedPct %>%)
-                </div>
-            <% } %>
+            <div class="card-header"><h3>🤖 AI Recommendations</h3></div>
+            <% if (bedPct > 80) { %><div class="alert-item danger">🚨 Bed utilization critical (<%= bedPct %>%)</div>
+            <% } else if (bedPct > 60) { %><div class="alert-item warning">⚠️ Bed utilization high (<%= bedPct %>%)</div>
+            <% } else { %><div class="alert-item success">✅ Bed utilization optimal (<%= bedPct %>%)</div><% } %>
 
-            <% if (icuPct > 80) { %>
-                <div class="alert-item danger">
-                    🚨 ICU utilization critical (<%= icuPct %>%) — alert medical team immediately
-                </div>
-            <% } else if (icuPct > 60) { %>
-                <div class="alert-item warning">
-                    ⚠️ ICU utilization high (<%= icuPct %>%) — prepare additional units
-                </div>
-            <% } else { %>
-                <div class="alert-item success">
-                    ✅ ICU utilization is optimal (<%= icuPct %>%)
-                </div>
-            <% } %>
+            <% if (icuPct > 80) { %><div class="alert-item danger">🚨 ICU utilization critical (<%= icuPct %>%)</div>
+            <% } else if (icuPct > 60) { %><div class="alert-item warning">⚠️ ICU utilization high (<%= icuPct %>%)</div>
+            <% } else { %><div class="alert-item success">✅ ICU utilization optimal (<%= icuPct %>%)</div><% } %>
 
-            <% if (totalOt == 0) { %>
-                <div class="alert-item info">ℹ️ No OTs configured — add OTs in Resources</div>
-            <% } else if (availableOt == 0) { %>
-                <div class="alert-item danger">🚨 All OTs are occupied or under maintenance</div>
-            <% } else { %>
-                <div class="alert-item success">✅ <%= availableOt %> OT(s) available for scheduling</div>
-            <% } %>
+            <% if (totalOt == 0) { %><div class="alert-item info">ℹ️ No OTs configured</div>
+            <% } else if (availableOt == 0) { %><div class="alert-item danger">🚨 All OTs occupied</div>
+            <% } else { %><div class="alert-item success">✅ <%= availableOt %> OT(s) available</div><% } %>
 
-            <%-- Blood bank alerts --%>
-            <% if (bloodBanks != null) {
-                for (BloodBank b : bloodBanks) {
-                    if (b.getDaysUntilExpiry() <= 3 && !b.isExpired()) { %>
-                        <div class="alert-item warning">
-                            ⚠️ <%= b.getComponent() %> (<%= b.getBloodGroup() %>) expires in <%= b.getDaysUntilExpiry() %> day(s)
-                        </div>
-                    <% } else if (b.isExpired()) { %>
-                        <div class="alert-item danger">
-                            🚨 <%= b.getComponent() %> (<%= b.getBloodGroup() %>) has expired — remove immediately
-                        </div>
-                <% }}} %>
+            <% if (bloodBanks != null) { for (BloodBank b : bloodBanks) {
+                if (b.isExpired()) { %><div class="alert-item danger">🚨 <%= b.getComponent() %> (<%= b.getBloodGroup() %>) EXPIRED</div>
+                <% } else if (b.getDaysUntilExpiry() <= 3) { %><div class="alert-item warning">⚠️ <%= b.getComponent() %> (<%= b.getBloodGroup() %>) expires in <%= b.getDaysUntilExpiry() %> day(s)</div>
+            <% }}} %>
         </div>
 
-        <!-- Today's OT Schedule -->
+        <!-- Today's OT -->
         <div class="card">
             <div class="card-header">
                 <h3>📅 Today's OT Schedule</h3>
-                <span class="count-badge">
-                    <%= todayOtSchedules != null ? todayOtSchedules.size() : 0 %> scheduled
-                </span>
+                <span class="count-badge"><%= todayOtSchedules != null ? todayOtSchedules.size() : 0 %> scheduled</span>
             </div>
             <% if (todayOtSchedules == null || todayOtSchedules.isEmpty()) { %>
-                <div class="empty-state">
-                    <div class="icon">📭</div>
-                    <p>No OT procedures scheduled for today.</p>
-                </div>
+                <div class="empty-state"><div class="icon">📭</div><p>No OT procedures today.</p></div>
             <% } else { %>
                 <table>
-                    <tr>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>OT</th>
-                        <th>Time</th>
-                        <th>Status</th>
-                    </tr>
+                    <tr><th>Patient</th><th>Doctor</th><th>OT</th><th>Time</th><th>Status</th></tr>
                     <% for (OtSchedule os : todayOtSchedules) { %>
                     <tr>
                         <td><%= patientNameMap != null ? patientNameMap.getOrDefault(os.getPatientId(), "Unknown") : "Unknown" %></td>
@@ -419,27 +277,17 @@
             <% } %>
         </div>
 
-        <!-- Active Bed Admissions -->
+        <!-- Active Admissions -->
         <div class="card">
             <div class="card-header">
                 <h3>🛏️ Active Admissions</h3>
-                <span class="count-badge">
-                    <%= activeBedAdmissions != null ? activeBedAdmissions.size() : 0 %> admitted
-                </span>
+                <span class="count-badge"><%= activeBedAdmissions != null ? activeBedAdmissions.size() : 0 %> admitted</span>
             </div>
             <% if (activeBedAdmissions == null || activeBedAdmissions.isEmpty()) { %>
-                <div class="empty-state">
-                    <div class="icon">🛏️</div>
-                    <p>No active bed admissions.</p>
-                </div>
+                <div class="empty-state"><div class="icon">🛏️</div><p>No active admissions.</p></div>
             <% } else { %>
                 <table>
-                    <tr>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>Bed</th>
-                        <th>Discharge</th>
-                    </tr>
+                    <tr><th>Patient</th><th>Doctor</th><th>Bed</th><th>Discharge</th></tr>
                     <% for (BedAdmission ba : activeBedAdmissions) { %>
                     <tr>
                         <td><%= patientNameMap != null ? patientNameMap.getOrDefault(ba.getPatientId(), "Unknown") : "Unknown" %></td>
@@ -459,10 +307,7 @@
                 <span class="count-badge"><%= totalDoctors %> total</span>
             </div>
             <% if (recentDoctors == null || recentDoctors.isEmpty()) { %>
-                <div class="empty-state">
-                    <div class="icon">👨‍⚕️</div>
-                    <p>No doctors registered yet.</p>
-                </div>
+                <div class="empty-state"><div class="icon">👨‍⚕️</div><p>No doctors yet.</p></div>
             <% } else { %>
                 <table>
                     <tr><th>Name</th><th>Department</th><th>Experience</th></tr>
@@ -484,10 +329,7 @@
                 <span class="count-badge"><%= totalPatients %> total</span>
             </div>
             <% if (recentPatients == null || recentPatients.isEmpty()) { %>
-                <div class="empty-state">
-                    <div class="icon">👥</div>
-                    <p>No patients registered yet.</p>
-                </div>
+                <div class="empty-state"><div class="icon">👥</div><p>No patients yet.</p></div>
             <% } else { %>
                 <table>
                     <tr><th>Name</th><th>Blood Group</th><th>Age</th></tr>
@@ -504,6 +346,5 @@
 
     </div>
 </div>
-
 </body>
 </html>

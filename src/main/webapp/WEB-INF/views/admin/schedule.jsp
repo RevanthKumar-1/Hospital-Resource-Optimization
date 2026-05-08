@@ -149,6 +149,7 @@
     String activeTab = request.getParameter("tab") != null
                        ? request.getParameter("tab") : "bed";
     String successMsg = request.getParameter("success");
+	String errorMsg = request.getParameter("error");
 
     List<Patient> patients = (List<Patient>) request.getAttribute("patients");
     List<Doctor> doctors = (List<Doctor>) request.getAttribute("doctors");
@@ -181,6 +182,8 @@
         <a href="/admin/doctors">👨‍⚕️ Doctors</a>
         <a href="/admin/patients">👥 Patients</a>
         <a href="/admin/schedule" class="active">📅 Schedule</a>
+		<a href="/admin/labs">🔬 Labs</a>
+		<a href="/admin/external">🌐 External Sources</a>
     </div>
     <div class="sidebar-bottom">
         <a href="/logout" class="logout-btn">🚪 Logout</a>
@@ -195,9 +198,38 @@
 <!-- Main -->
 <div class="main">
 
-    <% if (successMsg != null) { %>
-        <div class="alert success">✅ <%= successMsg %></div>
-    <% } %>
+
+	    <% if (successMsg != null) { %>
+	        <div class="alert success">✅ <%= successMsg %></div>
+	    <% } %>
+
+	    <% if ("otconflict".equals(errorMsg)) { %>
+	        <div class="alert error">
+	            ❌ OT Conflict! This OT is already booked during that time slot.
+	            Please choose a different time or OT.
+	        </div>
+	    <% } else if ("doctorconflict".equals(errorMsg)) { %>
+	        <div class="alert error">
+	            ❌ Doctor Conflict! This doctor already has a procedure scheduled
+	            during that time.
+	        </div>
+	    <% } else if ("invalidtime".equals(errorMsg)) { %>
+	        <div class="alert error">
+	            ❌ Invalid time! End time must be after start time.
+	        </div>
+	    <% } else if ("pastdate".equals(errorMsg)) { %>
+	        <div class="alert error">
+	            ❌ Cannot schedule OT in the past!
+	        </div>
+	    <% } else if ("bedoccupied".equals(errorMsg)) { %>
+	        <div class="alert error">
+	            ❌ This bed is already occupied! Please select a different bed.
+	        </div>
+	    <% } else if ("invaliddates".equals(errorMsg)) { %>
+	        <div class="alert error">
+	            ❌ Discharge date must be after admission date!
+	        </div>
+	    <% } %>
 
     <!-- Tabs -->
     <div class="tabs">

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -19,7 +20,7 @@ public class AdminPatientController {
     @Autowired private DoctorPatientRepository doctorPatientRepository;
     @Autowired private BedRepository bedRepository;
     @Autowired private IcuRepository icuRepository;
-    @Autowired private OtRepository otRepository;
+    @Autowired private OtScheduleRepository otRepository;
     @Autowired private BedAdmissionRepository bedAdmissionRepository;
     @Autowired private IcuAdmissionRepository icuAdmissionRepository;
     @Autowired private OtScheduleRepository otScheduleRepository;
@@ -110,32 +111,45 @@ public class AdminPatientController {
 
     @PostMapping("/schedule/assign-bed")
     public String assignBed(@RequestParam Long patientId,
-                            @RequestParam Long doctorId,
-                            @RequestParam Integer bedId,
-                            @RequestParam String admittedDate,
-                            @RequestParam String dischargeDate,
-                            HttpSession session) {
-        if (!isAdmin(session)) return "redirect:/";
-
-        // Mark bed as occupied
-        Bed bed = bedRepository.findById(bedId).orElse(null);
-        if (bed != null) {
-            bed.setStatus("OCCUPIED");
-            bedRepository.save(bed);
-        }
-
-        // Create admission record
-        BedAdmission admission = new BedAdmission();
-        admission.setBedId(bedId);
-        admission.setPatientId(patientId);
-        admission.setDoctorId(doctorId);
-        admission.setAdmittedDate(LocalDate.parse(admittedDate));
-        admission.setDischargeDate(LocalDate.parse(dischargeDate));
-        admission.setStatus("ACTIVE");
-        bedAdmissionRepository.save(admission);
-
-        return "redirect:/admin/schedule?tab=bed&success=Bed assigned successfully";
-    }
+            @RequestParam Long doctorId,
+            @RequestParam Integer bedId,
+            @RequestParam String admittedDate,
+            @RequestParam String dischargeDate,
+            HttpSession session) {
+		if (!isAdmin(session)) return "redirect:/";
+		
+		// ✅ Check: bed already occupied
+		BedAdmission existing = bedAdmissionRepository
+		.findByBedIdAndStatus(bedId, "ACTIVE");
+		if (existing != null) {
+		return "redirect:/admin/schedule?tab=bed&error=bedoccupied";
+		}
+		
+		// ✅ Check: discharge must be after admission
+		LocalDate admitted = LocalDate.parse(admittedDate);
+		LocalDate discharge = LocalDate.parse(dischargeDate);
+		if (!discharge.isAfter(admitted)) {
+		return "redirect:/admin/schedule?tab=bed&error=invaliddates";
+		}
+		
+		// All good — save admission
+		Bed bed = bedRepository.findById(bedId).orElse(null);
+		if (bed != null) {
+		bed.setStatus("OCCUPIED");
+		bedRepository.save(bed);
+		}
+		
+		BedAdmission admission = new BedAdmission();
+		admission.setBedId(bedId);
+		admission.setPatientId(patientId);
+		admission.setDoctorId(doctorId);
+		admission.setAdmittedDate(admitted);
+		admission.setDischargeDate(discharge);
+		admission.setStatus("ACTIVE");
+		bedAdmissionRepository.save(admission);
+		
+		return "redirect:/admin/schedule?tab=bed&success=Bed assigned successfully";
+	}
 
     // ─── RELEASE BED ──────────────────────────────────────────
 
@@ -217,16 +231,46 @@ public class AdminPatientController {
                            @RequestParam String startTime,
                            @RequestParam String endTime,
                            HttpSession session) {
+
         if (!isAdmin(session)) return "redirect:/";
 
+        LocalDate date = LocalDate.parse(scheduleDate);
+        java.time.LocalTime start = java.time.LocalTime.parse(startTime);
+        java.time.LocalTime end = java.time.LocalTime.parse(endTime);
+
+        // ✅ Check 1: end time must be after start time
+        if (!end.isAfter(start)) {
+            return "redirect:/admin/schedule?tab=ot&error=invalidtime";
+        }
+
+        // ✅ Check 2: OT conflict — same OT, overlapping time
+        List<OtSchedule> otConflicts = otScheduleRepository
+            .findConflictingSchedules(otId, date, start, end);
+        if (!otConflicts.isEmpty()) {
+            return "redirect:/admin/schedule?tab=ot&error=otconflict";
+        }
+
+        // ✅ Check 3: Doctor conflict — same doctor, overlapping time
+        List<OtSchedule> doctorConflicts = otScheduleRepository
+            .findDoctorConflicts(doctorId, date, start, end);
+        if (!doctorConflicts.isEmpty()) {
+            return "redirect:/admin/schedule?tab=ot&error=doctorconflict";
+        }
+
+        // ✅ Check 4: Can't schedule in the past
+        if (date.isBefore(LocalDate.now())) {
+            return "redirect:/admin/schedule?tab=ot&error=pastdate";
+        }
+
+        // All checks passed — save schedule
         OtSchedule schedule = new OtSchedule();
         schedule.setOtId(otId);
         schedule.setPatientId(patientId);
         schedule.setDoctorId(doctorId);
         schedule.setProcedureName(procedureName);
-        schedule.setScheduleDate(LocalDate.parse(scheduleDate));
-        schedule.setStartTime(java.time.LocalTime.parse(startTime));
-        schedule.setEndTime(java.time.LocalTime.parse(endTime));
+        schedule.setScheduleDate(date);
+        schedule.setStartTime(start);
+        schedule.setEndTime(end);
         schedule.setStatus("SCHEDULED");
         otScheduleRepository.save(schedule);
 
@@ -248,7 +292,7 @@ public class AdminPatientController {
 
             // If completed or cancelled, free up the OT
             if ("COMPLETED".equals(status) || "CANCELLED".equals(status)) {
-                Ot ot = otRepository.findById(schedule.getOtId()).orElse(null);
+                OtSchedule ot = otRepository.findById(schedule.getOtId()).orElse(null);
                 if (ot != null) {
                     ot.setStatus("AVAILABLE");
                     otRepository.save(ot);
